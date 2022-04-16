@@ -7,31 +7,36 @@ Created on Sat Apr 16 01:29:32 2022
 import paho.mqtt.client as mqtt
 import json
 import time
-import group_3_util
+# import group_3_util
 
 # Subscriber.py    
 
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
+
 # decode and print the message when received
 def on_message (client, userdata, message):
-    string_message: str = message.payload.decode("utf-8")
-    message = json.Loads(string_message)
-    group_3_util.print_data(message)
-
-# some client name
-client_name = "client-sub"
+    print(message.topic+" "+str(message.payload))
+    data = message.payload.decode("utf-8")
+    obj = json.loads(data)
+    print('message received ', obj["timeCreated"], obj["temperature"])
+    # group_3_util.print_data(message)
 
 # using open source broker
 broker = "mqtt.eclipseprojects.io"
 
 # create client
-client = mqtt.Client(client_name)
+client = mqtt.Client()
+
+client.on_message = on_message
 
 # connect to broker
-client.connect(broker)
+client.connect(broker, 1883)
 
+client.subscribe('indoorTemp')
 print('Subscribing')
-client.subscribe('studentdata')
-client.on_message = on_message
+
 time.sleep(2)
 
-client.loop_forever()
+while True: 
+    client.loop_forever()
