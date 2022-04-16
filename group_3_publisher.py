@@ -12,20 +12,22 @@ import time
 
 #Publisher.py
 
+broker = "mqtt.eclipseprojects.io"
+
+client = mqtt.Client()
+
+print("connecting to Broker", broker)
+
+client.connect(broker, 1883)
+
+client.loop_start()
+
 for i in range(5):
     mydict = group_3_util.create_data()
     dict_str = json.dumps(mydict)
-    
-    client_name = "client-sub"
-    broker = "mqtt.eclipseprojects.io"
-    
-    client = mqtt.Client(client_name)
-    
-    print("connecting to Broker", broker)
-    
-    client.connect(broker)
-    
+    client.publish("indoorTemp", payload=dict_str)
+    print('Just published' + str(dict_str) + 'to topic indoorTemp')
     time.sleep(4)
-    
-    print('Just published' + str(dict_str) + 'to topic studentdata')
-    client.disconnect()
+
+client.loop_stop()
+client.disconnect()
