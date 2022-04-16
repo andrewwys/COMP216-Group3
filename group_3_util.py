@@ -14,7 +14,7 @@ import math
 # Create wind speed data
 def create_data():
 
-    noise = random.randInt(-100,100) / 500
+    noise = random.randint(-100,100) / 500
     timestamp = time.asctime()
     x = (int(timestamp[-7:-5]) / 7.5) -4  # generate a number from -4 to 4 
     y = math.sin(x) * 1.5 + 18 + noise
